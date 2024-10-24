@@ -1,12 +1,11 @@
-from flask import Flask, session, request, redirect, url_for, render_template
+from flask import Flask, request, render_template
 import pickle
-import os
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
-app = Flask(__name__)
+application = Flask(__name__)
 SECRET_KEY = "BRUH"
-app.config.from_object(__name__)
+application.config.from_object(__name__)
 
 def load_model():
     loaded_model = None
@@ -18,15 +17,14 @@ def load_model():
 
     return loaded_model, vectorizer
 
-@app.route("/")
+@application.route("/")
 def index():
     return "Your Flask App Works!"
 
-@app.route("/model", methods=["GET", "POST"])
+@application.route("/model", methods=["GET", "POST"])
 def use_model():
     loaded_model, vectorizer = load_model()
     news = request.args.get("news")
-    print(news)
     if news:
         prediction = loaded_model.predict(vectorizer.transform([news]))[0]
         print(prediction)
@@ -37,4 +35,4 @@ def use_model():
     return render_template("index.html", output=prediction, outputted=outputted)
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    application.run(port=5000, debug=True)
