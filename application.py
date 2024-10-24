@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import pickle
+from time import time
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 
@@ -23,6 +24,7 @@ def index():
 
 @application.route("/model", methods=["GET", "POST"])
 def use_model():
+    start = time()
     loaded_model, vectorizer = load_model()
     news = request.args.get("news")
     if news:
@@ -32,6 +34,7 @@ def use_model():
     else:
         prediction = None
         outputted = False
+    end = time()
     return render_template("index.html", output=prediction, outputted=outputted)
 
 if __name__ == "__main__":
